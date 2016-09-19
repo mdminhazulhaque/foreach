@@ -1,0 +1,53 @@
+#!/bin/bash
+
+usage()
+{
+    echo "Usage: foreach FILENAME COMMAND" > /dev/stderr
+    echo "       cat FILENAME | foreach COMMAND" > /dev/stderr
+    echo "       COMMAND: A string with {} which will be replaced with LINE from FILENAME"
+    exit 1
+}
+
+# pass nothing, do nothing
+if [ $# -lt 1 ]
+then
+    usage
+    exit 1
+fi
+
+# piped mode
+if read -t 0
+then
+    filename=/dev/stdin
+else
+    if [ ! -f $1 ]
+    then
+        echo "Cannot open file $1 for reading" > /dev/stderr
+        exit 1
+    fi
+    filename=$1; shift
+fi
+
+if echo $@ | grep '{}' &> /dev/null
+then
+    replace=Yes
+else
+    replace=No
+fi    
+
+while read -r line
+do
+    if [ $replace == "No" ]
+    then
+        # execute the command with line string as argument
+        $@ $line
+    else
+        # replace {} with line content
+        # do extra backslash escaping
+        exec_str=$(echo $@ | sed "s/{}/${line//\//\\/}/g")
+        # exec baby, exec
+        $exec_str
+    fi
+done < $filename
+
+exit 0
