@@ -58,6 +58,7 @@ debian is awesome
 arch is awesome
 freebsd is awesome
 opensuse is awesome
+```
 
 `foreach` can also be used without piping data into it. In such cases first argument will be taken as input filename. For example,
 
