@@ -97,6 +97,11 @@ sudo wget -O /usr/local/bin/foreach https://raw.githubusercontent.com/minhazul-h
 sudo chmod +x /usr/local/bin/foreach
 ```
 
-## Bugs?
+## Changelogs
+
+- [x] 2017-05-05 Fixed an issue where last line was not being read
+
+
+## More Bugs?
 
 Open issues if you find any. You are also welcome to submit patches.
