@@ -35,7 +35,7 @@ else
     replace=No
 fi    
 
-while read -r line
+(cat $filename; echo) | while read -r line
 do
     if [ $replace == "No" ]
     then
@@ -48,6 +48,6 @@ do
         # exec baby, exec
         $exec_str
     fi
-done < $filename
+done #< $filename
 
 exit 0
