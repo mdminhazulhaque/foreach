@@ -93,7 +93,7 @@ https://www.youtube.com/watch?v=ZoCyVrl94yE
 Download `foreach` and put anywhere in your `PATH`. Or do the following.
 
 ```bash
-sudo wget -O /usr/local/bin/foreach https://raw.githubusercontent.com/minhazul-haque/foreach/master/foreach
+sudo wget -O /usr/local/bin/foreach https://raw.githubusercontent.com/mdminhazulhaque/foreach/master/foreach
 sudo chmod +x /usr/local/bin/foreach
 ```
 
