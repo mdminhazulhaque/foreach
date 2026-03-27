@@ -4,7 +4,7 @@ usage()
 {
     echo "Usage: foreach FILENAME COMMAND" > /dev/stderr
     echo "       cat FILENAME | foreach COMMAND" > /dev/stderr
-    echo "       COMMAND: A string with {} which will be replaced with LINE from FILENAME"
+    echo "       COMMAND: A string with {} which will be replaced with LINE from FILENAME" > /dev/stderr
     exit 1
 }
 
@@ -12,42 +12,39 @@ usage()
 if [ $# -lt 1 ]
 then
     usage
-    exit 1
 fi
 
 # piped mode
-if read -t 0
+if [ ! -t 0 ]
 then
     filename=/dev/stdin
 else
-    if [ ! -f $1 ]
+    if [ ! -f "$1" ]
     then
         echo "Cannot open file $1 for reading" > /dev/stderr
         exit 1
     fi
-    filename=$1; shift
+    filename="$1"; shift
 fi
 
-if echo $@ | grep '{}' &> /dev/null
+if echo "$@" | grep -q '{}'
 then
     replace=Yes
 else
     replace=No
-fi    
+fi
 
-(cat $filename; echo) | while read -r line
+(cat "$filename"; echo) | while read -r line
 do
-    if [ $replace == "No" ]
+    if [ "$replace" == "No" ]
     then
         # execute the command with line string as argument
-        $@ $line
+        "$@" "$line"
     else
-        # replace {} with line content
-        # do extra backslash escaping
-        exec_str=$(echo $@ | sed "s/{}/${line//\//\\/}/g")
-        # exec baby, exec
-        $exec_str
+        # replace {} with line content using awk to avoid sed metacharacter issues
+        exec_str=$(printf '%s' "$@" | awk -v val="$line" '{gsub(/\{\}/, val); print}')
+        eval "$exec_str"
     fi
-done #< $filename
+done
 
 exit 0

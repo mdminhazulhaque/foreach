@@ -1,6 +1,6 @@
 # foreach
 
-`foreach` is a simple bash script which reads given file/stdin line by line and executes specific command with the line as argument.
+`foreach` is a simple bash script which reads a given file/stdin line by line and executes a specific command with the line as argument.
 
 ## dude! ever heard of xargs?
 
@@ -9,32 +9,32 @@ Yup I did! But I am too lazy to memorize its complex argument passing techniques
 Here is a simple example.
 
 ```bash
-~:minhaz $ cat links.txt 
+$ cat links.txt
 https://www.youtube.com/watch?v=el0-J3tJs5M
 https://www.youtube.com/watch?v=CBsXggn_4qA
 https://www.youtube.com/watch?v=ZoCyVrl94yE
 ```
 
-Now you want to execute `youtube-dl` with each of the line as argument. `xargs` might help in this case.
+Now you want to execute `youtube-dl` with each line as argument. `xargs` might help in this case.
 
 ```bash
-~:minhaz $ cat links.txt | xargs -L1 echo youtube-dl
-youtube-dl https://www.youtube.com/watch?v=el0-J3tJs5M
-youtube-dl https://www.youtube.com/watch?v=CBsXggn_4qA
-youtube-dl https://www.youtube.com/watch?v=ZoCyVrl94yE
+$ cat links.txt | xargs -L1 youtube-dl
+[youtube] el0-J3tJs5M: Downloading ...
+[youtube] CBsXggn_4qA: Downloading ...
+[youtube] ZoCyVrl94yE: Downloading ...
 ```
 
 But wait! `xargs`? `-L1`? That's too much to remember. And what if I want to use the argument in the middle of some commands? Like the following?
 
 ```bash
-~:minhaz $ cat bands.txt 
+$ cat bands.txt
 coldplay
 dream theater
 iron maiden
 metallica
 pink floyd
 
-~:minhaz $ cat bands.txt | somemagiccommand echo i love {} and {} rocks
+$ cat bands.txt | somemagiccommand echo i love {} and {} rocks
 i love coldplay and coldplay rocks
 i love dream theater and dream theater rocks
 i love iron maiden and iron maiden rocks
@@ -42,17 +42,17 @@ i love metallica and metallica rocks
 i love pink floyd and pink floyd rocks
 ```
 
-`foreach` is that `somemagiccommand`. It does format the line from a file where referenced as `{}`. You can use `{}` as much as you want, wherever the position of the argument is.
+`foreach` is that `somemagiccommand`. It replaces every `{}` in the command with the line from the file. You can use `{}` as many times as you want, wherever the position of the argument is.
 
 ```bash
-~:minhaz $ cat distro.txt 
+$ cat distro.txt
 kubuntu
 debian
 arch
 freebsd
 opensuse
 
-~:minhaz $ foreach distro.txt echo {} is awesome # starts with {}
+$ foreach distro.txt echo {} is awesome # starts with {}
 kubuntu is awesome
 debian is awesome
 arch is awesome
@@ -60,29 +60,29 @@ freebsd is awesome
 opensuse is awesome
 ```
 
-`foreach` can also be used without piping data into it. In such cases first argument will be taken as input filename. For example,
+`foreach` can also be used without piping data into it. In such cases, the first argument will be taken as input filename. For example,
 
 ```bash
-~:minhaz $ cat fruits.txt 
+$ cat fruits.txt
 apple
 banana
 cherry
 
-~:minhaz $ foreach fruits.txt echo i love {} # ends with {}
+$ foreach fruits.txt echo i love {} # ends with {}
 i love apple
 i love banana
 i love cherry
 ```
 
-You can skip `{}` if it will be passed as only one argument of the command you want to run. For example,
+You can skip `{}` if it is the only argument of the command you want to run. For example,
 
 ```bash
-~:minhaz $ cat links.txt 
+$ cat links.txt
 https://www.youtube.com/watch?v=el0-J3tJs5M
 https://www.youtube.com/watch?v=CBsXggn_4qA
 https://www.youtube.com/watch?v=ZoCyVrl94yE
 
-~:minhaz $ foreach links.txt youtube-dl # {} is not used here
+$ foreach links.txt youtube-dl # {} is not used here
 [youtube] el0-J3tJs5M: Downloading ...
 [youtube] CBsXggn_4qA: Downloading ...
 [youtube] ZoCyVrl94yE: Downloading ...
@@ -90,17 +90,17 @@ https://www.youtube.com/watch?v=ZoCyVrl94yE
 
 ## Installation
 
-Download `foreach` and put anywhere in your `PATH`. Or do the following.
+Download `foreach` and put it anywhere in your `PATH`. Or do the following.
 
 ```bash
 sudo wget -O /usr/local/bin/foreach https://raw.githubusercontent.com/mdminhazulhaque/foreach/master/foreach
 sudo chmod +x /usr/local/bin/foreach
 ```
 
-## Changelogs
+## Changelog
 
-- [x] 2017-05-05 Fixed an issue where last line was not being read
-
+- 2026-03-27 Fixed quoting, pipe detection, and sed injection issues
+- 2017-05-05 Fixed an issue where last line was not being read
 
 ## More Bugs?
 
