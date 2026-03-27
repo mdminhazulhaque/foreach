@@ -88,6 +88,10 @@ $ foreach links.txt youtube-dl # {} is not used here
 [youtube] ZoCyVrl94yE: Downloading ...
 ```
 
+## Disclaimer
+
+This script relies on `[ ! -t 0 ]` to detect piped input, which may not work correctly in zsh or other non-bash, non-interactive terminals. In such environments, prefer the piped form (`cat file.txt | foreach cmd`) over the file-argument form (`foreach file.txt cmd`).
+
 ## Installation
 
 Download `foreach` and put it anywhere in your `PATH`. Or do the following.

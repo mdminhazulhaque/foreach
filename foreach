@@ -34,7 +34,7 @@ else
     replace=No
 fi
 
-(cat "$filename"; echo) | while read -r line
+cat "$filename" | while read -r line || [ -n "$line" ]
 do
     if [ "$replace" == "No" ]
     then
@@ -42,7 +42,7 @@ do
         "$@" "$line"
     else
         # replace {} with line content using awk to avoid sed metacharacter issues
-        exec_str=$(printf '%s' "$@" | awk -v val="$line" '{gsub(/\{\}/, val); print}')
+        exec_str=$(echo "$*" | awk -v val="$line" '{gsub(/\{\}/, val); print}')
         eval "$exec_str"
     fi
 done
